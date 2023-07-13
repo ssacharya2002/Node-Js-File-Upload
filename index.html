@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Node js file upload</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1.5rem;
+        background-color: #333;
+        color: whitesmoke;
+      }
+      input,
+      button {
+        font: inherit;
+        width: max-content;
+      }
+
+      form {
+        display: flex;
+        flex-flow: column nowrap;
+        gap: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Node js file upload</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" id="myFiles" accept="*" multiple />
+      <button>submit</button>
+      <h2></h2>
+      <h3></h3>
+    </form>
+
+    <button id="viewfile">view file</button>
+    <div id="addfile"></div>
+    <script>
+      const form = document.getElementById("uploadForm");
+
+      const sendFile = async () => {
+        //Object
+
+        const myFiles = document.getElementById("myFiles").files;
+
+        const formData = new FormData();
+
+        Object.keys(myFiles).forEach((key) => {
+          formData.append(myFiles.item(key).name, myFiles.item(key));
+        });
+
+        const response = await fetch("http://192.168.43.251:3500/upload", {
+          // const response = await fetch("http://localhost:3500/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const json = await response.json();
+
+        const h2 = document.querySelector("h2");
+        h2.textContent = `status : ${json?.status}`;
+
+        const h3 = document.querySelector("h3");
+        h2.textContent = `${json?.message}`;
+
+        console.log(json);
+      };
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        sendFile();
+      });
+
+      const viewfile = document.getElementById("viewfile");
+      const listfile = document.getElementById("addfile");
+
+      const files = async () => {
+        const response = await fetch("http://192.168.43.251:3500/image", {
+          method: "GET",
+        });
+
+        const json = await response.json();
+
+        const div = document.createElement("div");
+
+        for (const key in json) {
+          if (json.hasOwnProperty(key)) {
+            const li = document.createElement("li");
+            const a = document.createElement("a");
+            a.setAttribute(
+              "href",
+              `http://192.168.43.251:3500/image/${json[key]}`
+            );
+            a.textContent = json[key];
+            li.appendChild(a);
+
+            div.appendChild(li);
+          }
+        }
+
+        listfile.innerHTML = div.innerHTML;
+      };
+
+      viewfile.addEventListener("click", (e) => {
+        e.preventDefault();
+        files();
+      });
+    </script>
+  </body>
+</html>
