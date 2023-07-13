@@ -49,8 +49,7 @@
           formData.append(myFiles.item(key).name, myFiles.item(key));
         });
 
-        const response = await fetch("http://192.168.43.251:3500/upload", {
-          // const response = await fetch("http://localhost:3500/upload", {
+          const response = await fetch("http://localhost:3500/upload", {
           method: "POST",
           body: formData,
         });
@@ -75,7 +74,7 @@
       const listfile = document.getElementById("addfile");
 
       const files = async () => {
-        const response = await fetch("http://192.168.43.251:3500/image", {
+        const response = await fetch("http://localhost:3500/image", {
           method: "GET",
         });
 
@@ -89,7 +88,7 @@
             const a = document.createElement("a");
             a.setAttribute(
               "href",
-              `http://192.168.43.251:3500/image/${json[key]}`
+              `http://localhost:3500/image/${json[key]}`
             );
             a.textContent = json[key];
             li.appendChild(a);

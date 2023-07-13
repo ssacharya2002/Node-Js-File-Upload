@@ -61,7 +61,7 @@ app.get('/image', (req, res) => {
       res.json(files);
     });
   });
-  
+
 app.get("*", (req, res) => {
   return res.json({ message: "Route not found !" });
 });
